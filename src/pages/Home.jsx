@@ -1,4 +1,4 @@
-
+import Header from "../components/Header";
 
 
 
@@ -6,9 +6,7 @@ function Home () {
     return (
 
         <>
-            <nav>
-                <h1 className="text-red-600">E-SPORTIF</h1>
-            </nav>
+            <Header />
         </>
 
     );
