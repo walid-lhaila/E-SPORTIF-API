@@ -7,6 +7,7 @@ import classico from '../assets/img/elclassico.jpeg';
 import rider from '../assets/img/rider.jpeg';
 import Footer from "../components/Footer";
 import EventForm from "../components/EventForm";
+import ParticipantsList from "../components/ParticipantsList";
 import { useState } from "react";
 
 
@@ -15,6 +16,15 @@ import { useState } from "react";
 function Home () {
 
     const [isFormVisible, setIsFormVisible] = useState(false);
+    const [isParticipantsListVisible, setIsParticipantsListVisible] = useState(false);
+
+
+    const handelToggleList = () => {
+        setIsParticipantsListVisible(!isParticipantsListVisible);
+    }
+    const handleHideList = () => {
+        setIsParticipantsListVisible(false);
+    }
 
     const handleToggleForm = () => {
         setIsFormVisible(!isFormVisible);
@@ -57,12 +67,16 @@ function Home () {
 
                     <div className='flex flex-wrap gap-5 w-full items-center pt-20'>
 
-                        <EventCard img={bgtennis} />
+                        <EventCard img={bgtennis} showList={handelToggleList}/>
                         <EventCard img={classico} />
                         <EventCard img={rider} />
                         <EventCard img={bgtennis} />
 
                     </div>
+                    {isParticipantsListVisible && (
+                        <ParticipantsList preventClick={handleFormClick} onclose={handleHideList}  />
+                    )}
+
                 </div>
                     
                 <div className="py-10">
