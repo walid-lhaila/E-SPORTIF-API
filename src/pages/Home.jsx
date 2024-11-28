@@ -2,13 +2,13 @@ import Header from "../components/Header";
 import EventCard from "../components/EventCard";
 import background from "../assets/img/bg3.png";
 import background1 from "../assets/img/bg4.jpeg";
-import bgtennis from '../assets/img/bgtennis.jpeg'
-import classico from '../assets/img/elclassico.jpeg';
-import rider from '../assets/img/rider.jpeg';
 import Footer from "../components/Footer";
 import EventForm from "../components/EventForm";
 import ParticipantsList from "../components/ParticipantsList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { getAllParticipants, getEvents } from "../features/slices/eventSlice";
 
 
 
@@ -17,11 +17,30 @@ function Home () {
 
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [isParticipantsListVisible, setIsParticipantsListVisible] = useState(false);
+    const [selectedEventId, setSelectedEventId] = useState(null); 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
 
-    const handelToggleList = () => {
+    const {events} = useSelector((state) =>  state.event);
+    console.log(events)
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if(!token) {
+            navigate('/Login');
+        }else {
+            dispatch(getEvents());
+        }
+    }, [dispatch, navigate]);
+
+
+    const handelToggleList = (eventId) => {
+        setSelectedEventId(eventId)
+        dispatch(getAllParticipants(eventId));
         setIsParticipantsListVisible(!isParticipantsListVisible);
     }
+
     const handleHideList = () => {
         setIsParticipantsListVisible(false);
     }
@@ -35,6 +54,8 @@ function Home () {
     const handleFormClick = (event) => {
         event.stopPropagation();
     }
+
+
     return (
 
         <>
@@ -66,15 +87,13 @@ function Home () {
 
 
                     <div className='flex flex-wrap gap-5 w-full items-center pt-20'>
-
-                        <EventCard img={bgtennis} showList={handelToggleList}/>
-                        <EventCard img={classico} />
-                        <EventCard img={rider} />
-                        <EventCard img={bgtennis} />
+                        {events.map((event) => (
+                            <EventCard img={event.image} title={event.title} description={event.description} date={event.date} showList={() => handelToggleList(event._id)}/>
+                        ))}
 
                     </div>
                     {isParticipantsListVisible && (
-                        <ParticipantsList preventClick={handleFormClick} onclose={handleHideList}  />
+                        <ParticipantsList eventId={selectedEventId} preventClick={handleFormClick} onclose={handleHideList}  />
                     )}
 
                 </div>

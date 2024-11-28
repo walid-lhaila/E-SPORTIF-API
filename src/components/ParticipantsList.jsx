@@ -1,14 +1,17 @@
 import { useState } from "react";
 import ParticipantsForm from "./ParticipantsForm";
+import { useSelector } from "react-redux";
 
 
 
 
 
 
-const participantsList = ({onclose, preventClick}) => {
+const participantsList = ({eventId, onclose, preventClick}) => {
 
+    const participants = useSelector((state) => state.event.participants);
     const [isParticipantsFormVisible, setsParticipantsFormVisible] = useState(false);
+
 
     const handleToggleParticipantsForm = () => {
         setsParticipantsFormVisible(!isParticipantsFormVisible);
@@ -56,11 +59,14 @@ const participantsList = ({onclose, preventClick}) => {
                                 <th>PHONE</th>
                             </thead>
                             <tbody > 
-                                <tr className="text-center border-4 h-12 border-b border-gray-100 mt-2">
-                                    <td>Walid Lhaila</td>
-                                    <td>walidlhaila00à@gmail.com</td>
-                                    <td>06786756453</td>
+                                {participants.map((participant) => (
+                                <tr key={participant._id} className="text-center border-4 h-12 border-b border-gray-100 mt-2">
+                                    <td>{participant.fullName}</td>
+                                    <td>{participant.email}</td>
+                                    <td>{participant.phoneNumber}</td>
                                 </tr>
+                                ))}
+                               
                             </tbody>
                         </table>
                 </div>
