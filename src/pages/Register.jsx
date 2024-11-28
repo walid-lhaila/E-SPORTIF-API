@@ -1,11 +1,32 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import background from "../assets/img/bg.jpeg";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { register } from "../features/slices/authSlice";
 
 
 
 
 
 function Register() {
+
+    const [firstName, setFirstName] = useState('');
+    const[lastName, setLastName] = useState('');
+    const[phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const resultAction = await dispatch(register({firstName, lastName, email, password, phone}));
+        if(register.fulfilled.match(resultAction)){
+            navigate('/Login');
+        }
+
+    }
 
     return (
 
@@ -32,26 +53,31 @@ function Register() {
 
                         <div id="forms-container" className="flex overflow-hidden transition-transform transform ease-in-out duration-500">
                             <div id="clientForm" className="w-full">
-                                <form className="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2 ">
+                                <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2 ">
                                     <div>
-                                        <label className="block mb-2 text-sm text-gray-200 font-serif ">Username</label>
-                                        <input name="username"   required type="text" placeholder="John-Week" className="block w-full px-5 py-3 mt-2 text-gray-300 placeholder-gray-300   bg-red-50 border border-gray-200 rounded-lg dark:text-gray-800 dark:border-red-600 focus:border-red-600 focus:ring-red-600 focus:outline-none focus:ring focus:ring-opacity-40" />
+                                        <label className="block mb-2 text-sm text-gray-200 font-serif ">First Name</label>
+                                        <input name="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)}   required type="text" placeholder="John-Week" className="block w-full px-5 py-3 mt-2 text-gray-300 placeholder-gray-300   bg-red-50 border border-gray-200 rounded-lg dark:text-gray-800 dark:border-red-600 focus:border-red-600 focus:ring-red-600 focus:outline-none focus:ring focus:ring-opacity-40" />
+                                    </div>
+
+                                    <div>
+                                        <label className="block mb-2 text-sm text-gray-200 font-serif">Last Name</label>
+                                        <input name="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)}  required type="text" placeholder="0656788967" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-300 bg-red-50 border border-gray-200 rounded-lg dark:text-gray-800 dark:border-red-600 focus:border-red-600 focus:ring-red-600 focus:outline-none focus:ring focus:ring-opacity-40" />
                                     </div>
 
                                     <div>
                                         <label className="block mb-2 text-sm text-gray-200 font-serif">Phone Number</label>
-                                        <input name="phone"  required type="number" placeholder="0656788967" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-300 bg-red-50 border border-gray-200 rounded-lg dark:text-gray-800 dark:border-red-600 focus:border-red-600 focus:ring-red-600 focus:outline-none focus:ring focus:ring-opacity-40" />
+                                        <input name="phone" value={phone} onChange={(e) => setPhone(e.target.value)}  required type="number" placeholder="0656788967" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-300 bg-red-50 border border-gray-200 rounded-lg dark:text-gray-800 dark:border-red-600 focus:border-red-600 focus:ring-red-600 focus:outline-none focus:ring focus:ring-opacity-40" />
                                     </div>
 
                                     <div>
                                         <label className="block mb-2 text-sm text-gray-200 font-serif">Email address</label>
-                                        <input name="email" required type="email" placeholder="johnsnow@example.com" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-300 bg-red-50 border border-gray-200 rounded-lg dark:text-gray-800 dark:border-red-600 focus:border-red-600 focus:ring-red-600 focus:outline-none focus:ring focus:ring-opacity-40" />
+                                        <input name="email" required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="johnsnow@example.com" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-300 bg-red-50 border border-gray-200 rounded-lg dark:text-gray-800 dark:border-red-600 focus:border-red-600 focus:ring-red-600 focus:outline-none focus:ring focus:ring-opacity-40" />
                                     </div>
 
 
                                     <div>
                                         <label className="block mb-2 text-sm text-gray-200  font-serif">Password</label>
-                                        <input name="password" required type="password" placeholder="Enter your password" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-300 bg-red-50 border border-red-200 rounded-lg dark:text-gray-800 dark:border-red-600 focus:border-red-600 focus:ring-red-600 focus:outline-none focus:ring focus:ring-opacity-40" />
+                                        <input name="password" required type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-300 bg-red-50 border border-red-200 rounded-lg dark:text-gray-800 dark:border-red-600 focus:border-red-600 focus:ring-red-600 focus:outline-none focus:ring focus:ring-opacity-40" />
                                     </div>
 
                                     <button type="submit"

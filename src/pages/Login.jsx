@@ -1,11 +1,28 @@
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import background from '../assets/img/bg.jpeg';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../features/slices/authSlice';
 
 
 
 
 function Login() {
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const{ status } = useSelector((state) => state.auth);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const resultAction = await dispatch(login({email, password}));
+        if(login.fulfilled.match(resultAction)) {
+            navigate('/Home')
+        }
+    }
 
     return (
 
@@ -44,11 +61,11 @@ function Login() {
                     <span className="w-1/5 border-b dark:border-white lg:w-1/4"></span>
                 </div>
 
-                <form>
+                <form onSubmit={handleSubmit}>
                 
                     <div className="mt-4">
                         <label className="block mb-2 text-sm font-serif font-medium text-gray-200"  htmlFor="LoggingEmailAddress">Email Address</label>
-                        <input  name="email" className="block w-full px-4 py-2 text-gray-200 bg-white border rounded-lg dark:bg-red-50 dark:text-black dark:border-white focus:border-red-600 focus:ring-opacity-40 dark:focus:border-red-600 focus:outline-none focus:ring" type="email" />
+                        <input  name="email" value={email} onChange={(e) => setEmail(e.target.value)} className="block w-full px-4 py-2 text-gray-200 bg-white border rounded-lg dark:bg-red-50 dark:text-black dark:border-white focus:border-red-600 focus:ring-opacity-40 dark:focus:border-red-600 focus:outline-none focus:ring" type="email" />
                     </div>
 
                     <div className="mt-4">
@@ -57,7 +74,7 @@ function Login() {
                             <a href="#" className="text-xs text-white hover:underline">Forget Password?</a>
                         </div>
 
-                        <input name="password" className="block w-full px-4 py-2 text-gray-200 bg-white border rounded-lg dark:bg-red-50 dark:text-black dark:border-white focus:border-red-600 focus:ring-opacity-40 dark:focus:border-red-600 focus:outline-none focus:ring" type="password" />
+                        <input name="password" value={password} onChange={(e) => setPassword(e.target.value)} className="block w-full px-4 py-2 text-gray-200 bg-white border rounded-lg dark:bg-red-50 dark:text-black dark:border-white focus:border-red-600 focus:ring-opacity-40 dark:focus:border-red-600 focus:outline-none focus:ring" type="password" />
                     </div>
 
                     <div className="mt-6">
