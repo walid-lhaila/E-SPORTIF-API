@@ -56,6 +56,9 @@
         }
     )
 
+
+
+
     export const deleteEvent = createAsyncThunk(
         'event/delete',
         async(eventId, {rejectWithValue}) => {
@@ -74,8 +77,6 @@
 
    
 
-
-
     const eventSlice = createSlice({
         name: 'event',
         initialState,
@@ -86,7 +87,7 @@
         },
         extraReducers: (builder) => {
             builder
-            
+
 
             .addCase(createEvent.pending, (state) => {
                 state.status = 'loading';

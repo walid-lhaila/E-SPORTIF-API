@@ -14,7 +14,6 @@ const EventForm = ({onclose, preventClick}) => {
         const [date, setDate] = useState('');
         const [category, setCategory] = useState('');
         const [image, setImage] = useState(null);
-        const navigate = useNavigate();
         const dispatch = useDispatch();
         
 
