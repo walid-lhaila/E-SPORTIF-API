@@ -8,7 +8,8 @@ import ParticipantsList from "../components/ParticipantsList";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getAllParticipants, getEvents } from "../features/slices/eventSlice";
+import { getEvents } from "../features/slices/eventSlice";
+import { getAllParticipants } from '../features/slices/participants';
 
 
 

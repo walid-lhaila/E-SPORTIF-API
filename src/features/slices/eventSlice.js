@@ -57,22 +57,7 @@
     )
 
 
-    export const getAllParticipants = createAsyncThunk(
-        'event/getAllParticipants',
-        async(eventId, {rejectWithValue}) => {
-            try  {
-                const response = await axiosInstance.get(`/api/${eventId}/getAllParticipants`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                return response.data.participants;
-            } catch(error) {
-                return rejectWithValue(error.response?.data.message || error.message);
-            }
-        }
-    )
-
+   
 
 
 
@@ -110,19 +95,6 @@
                 state.error = action.payload;
             })
 
-
-            .addCase(getAllParticipants.pending, (state) => {
-                state.status = 'loading';
-                state.error = null;
-            })
-            .addCase(getAllParticipants.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.participants = action.payload;
-            })
-            .addCase(getAllParticipants.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.payload;
-            })
         }
     })
 
