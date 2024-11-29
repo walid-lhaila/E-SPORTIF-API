@@ -1,14 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import axiosInstance from "../../config/axiosConfig"
 import { toast } from "react-toastify";
-import { act } from "react";
-
 
 
 const initialState = {
     user: null,
+    token: localStorage.getItem('token'), 
     error: null,
-    token: null,
     status: 'idle',
 }
 
@@ -46,6 +44,13 @@ export const login = createAsyncThunk (
 const authSlice = createSlice({
     name: 'auth',
     initialState,
+    reducers: {
+        logout: (state) => {
+            state.user = null;
+            state.token = null;
+            localStorage.removeItem('token'); 
+        }
+    },
     extraReducers: (builder) => {
         builder
         .addCase(login.pending, (state) => {
@@ -79,5 +84,5 @@ const authSlice = createSlice({
     },
 });
 
-
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

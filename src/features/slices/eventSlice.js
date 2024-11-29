@@ -56,6 +56,21 @@
         }
     )
 
+    export const deleteEvent = createAsyncThunk(
+        'event/delete',
+        async(eventId, {rejectWithValue}) => {
+            try {
+                const response = await axiosInstance.delete(`/api/delete/${eventId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+                return response.data;
+            } catch(error) {
+                return rejectWithValue(error.response?.data);
+            }
+        }
+    )
 
    
 
@@ -64,9 +79,14 @@
     const eventSlice = createSlice({
         name: 'event',
         initialState,
-        reducers: {},
+        reducers: {
+            logout: (state) => {
+                state.events = [];
+            }
+        },
         extraReducers: (builder) => {
             builder
+            
 
             .addCase(createEvent.pending, (state) => {
                 state.status = 'loading';
@@ -87,10 +107,24 @@
                 state.error = null;
             })
             .addCase(getEvents.fulfilled, (state, action) => {
-                state.state = 'succeeded';
+                state.status = 'succeeded';
                 state.events = action.payload;
             })
             .addCase(getEvents.rejected, (state) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            })
+
+
+            .addCase(deleteEvent.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(deleteEvent.fulfilled, (state, action) => {
+                state.status = 'succeded';
+                state.events = state.events.filter((event) => event._id !== action.payload.eventId);
+            })
+            .addCase(deleteEvent.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
             })

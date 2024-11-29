@@ -14,6 +14,7 @@ import { getAllParticipants } from '../features/slices/participants';
 
 
 
+
 function Home () {
 
     const [isFormVisible, setIsFormVisible] = useState(false);
@@ -24,18 +25,17 @@ function Home () {
 
 
     const {events} = useSelector((state) =>  state.event);
-    console.log(events)
+    const { token } = useSelector((state) => state.auth); 
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if(!token) {
+     useEffect(() => {
+        if (!token) {
             navigate('/Login');
-        }else {
+        } else {
             dispatch(getEvents());
         }
-    }, [dispatch, navigate]);
+    }, [dispatch, navigate, token]);
 
-
+    
     const handelToggleList = (eventId) => {
         setSelectedEventId(eventId)
         dispatch(getAllParticipants(eventId));
@@ -88,10 +88,14 @@ function Home () {
 
 
                     <div className='flex flex-wrap gap-5 w-full items-center pt-20'>
-                        {events.map((event) => (
-                            <EventCard img={event.image} title={event.title} description={event.description} date={event.date} showList={() => handelToggleList(event._id)}/>
-                        ))}
-
+                        {events && events.length > 0 ? (
+                             events.map((event) => (
+                                <EventCard key={event._id} img={event.image} title={event.title} description={event.description} date={event.date} showList={() => handelToggleList(event._id)} eventId={event._id} />
+                            ))
+                        ) : (
+                            <h1>There Is No Event Yet</h1>
+                        )}
+                       
                     </div>
                     {isParticipantsListVisible && (
                         <ParticipantsList eventId={selectedEventId} preventClick={handleFormClick} onclose={handleHideList}  />
