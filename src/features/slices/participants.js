@@ -52,6 +52,26 @@ export const getAllParticipants = createAsyncThunk(
 )
 
 
+export const deleteParticipants = createAsyncThunk(
+    'event/deleteParticipants',
+    async({ eventId, participants }, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.delete(`/api/delete/${eventId}/participants`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                data: { participants },
+            });
+            toast.success("Participants Deleted Successfully");
+            return response.data.event;
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to delete participant(s)");
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+);
+
+
 const participantsSlice = createSlice ({
     name: 'participants',
     initialState,
@@ -71,6 +91,7 @@ const participantsSlice = createSlice ({
             state.error = action.payload;
         })
 
+        
 
         .addCase(getAllParticipants.pending, (state) => {
             state.status = 'loading';
@@ -81,6 +102,24 @@ const participantsSlice = createSlice ({
             state.participants = action.payload;
         })
         .addCase(getAllParticipants.rejected, (state, action) => {
+            state.status = 'failed';
+            state.error = action.payload;
+        })
+
+
+
+        .addCase(deleteParticipants.pending, (state) => {
+            state.status = 'loading';
+            state.error = null;
+        })
+        .addCase(deleteParticipants.fulfilled, (state, action) => {
+            state.status = 'succeeded';
+            const updatedEvent = action.payload;
+            if (updatedEvent && updatedEvent.participants) {
+                state.participants = updatedEvent.participants;
+            }
+        })
+        .addCase(deleteParticipants.rejected, (state, action) => {
             state.status = 'failed';
             state.error = action.payload;
         })

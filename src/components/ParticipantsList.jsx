@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ParticipantsForm from "./ParticipantsForm";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteParticipants } from "../features/slices/participants";
 
 
 
@@ -9,8 +10,15 @@ import { useSelector } from "react-redux";
 
 const participantsList = ({eventId, onclose, preventClick}) => {
 
+
+    const dispatch = useDispatch();
     const participants = useSelector((state) => state.participants.participants);
     const [isParticipantsFormVisible, setsParticipantsFormVisible] = useState(false);
+
+    const handleDeleteParticipant = (participantId) => {
+        const participantToDelete = [participantId];
+        dispatch(deleteParticipants({eventId, participants: participantToDelete})).unwrap().catch((error) => console.error("Error Deleting Participant:", error));
+    };
 
 
     const handleToggleParticipantsForm = () => {
@@ -69,7 +77,7 @@ const participantsList = ({eventId, onclose, preventClick}) => {
                                         <td>{participant.email}</td>
                                         <td>{participant.phoneNumber}</td>
                                         <td>
-                                            <button className="text-white font-medium bg-red-600 hover:bg-red-500 font-serif px-3 py-1 rounded duration-300">Delete</button>
+                                            <button onClick={() => handleDeleteParticipant(participant._id)} className="text-white font-medium bg-red-600 hover:bg-red-500 font-serif px-3 py-1 rounded duration-300">Delete</button>
                                         </td>
 
                                     </tr>
