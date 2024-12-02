@@ -58,6 +58,34 @@
 
 
 
+    export const updateEvent = createAsyncThunk(
+        'event/updated',
+        async ({ eventId, eventData }, { rejectWithValue }) => {
+            try {
+    
+                const response = await axiosInstance.put(`/api/update/${eventId}`, eventData, {
+                    headers: {
+                    'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+        
+                if (!response.data || !response.data.data) {
+                    throw new Error("Invalid API response");
+                }
+    
+                const updatedEvent = response.data.data;
+                toast.success('Event Updated Successfully');
+    
+                return updatedEvent;
+            } catch (error) {
+                toast.error(error.response?.data?.message || 'Failed To Update Event');
+                return rejectWithValue(error.response?.data || error.message);
+            }
+        }
+    );
+
+
 
     export const deleteEvent = createAsyncThunk(
         'event/delete',
@@ -112,6 +140,27 @@
                 state.events = action.payload;
             })
             .addCase(getEvents.rejected, (state) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            })
+
+
+            .addCase(updateEvent.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(updateEvent.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                const updatedEvent = action.payload;
+                if (!updatedEvent) {
+                    console.error("Updated event is undefined or malformed:", action.payload);
+                    return;
+                }            
+                state.events = state.events.map((event) =>
+                    event._id === updatedEvent._id ? updatedEvent : event
+                );
+            })
+            .addCase(updateEvent.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
             })

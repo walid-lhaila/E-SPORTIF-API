@@ -92,12 +92,12 @@
                     {isFormVisible && (
                         <EventForm onclose={handleHideRoom} preventClick={handleFormClick} />
                     )}
-
+    
                     {isUpdateFormVisible && selectedEventId && (
                         <UpdateEventForm
                             onclose={hnadleHideUpdateForm}
                             preventClick={handleFormClick}
-                            event={events.find((event) => event._id === selectedEventId)}
+                            eventId={selectedEventId}
                         />
                     )}
                 

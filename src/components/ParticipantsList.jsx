@@ -58,6 +58,7 @@ const participantsList = ({eventId, onclose, preventClick}) => {
                                     <th>FULL NAME</th>
                                     <th>EMAIL</th>
                                     <th>PHONE</th>
+                                    <th>ACTION</th>
                                 </tr>
                             </thead>
                             <tbody > 
@@ -67,6 +68,10 @@ const participantsList = ({eventId, onclose, preventClick}) => {
                                         <td>{participant.fullName}</td>
                                         <td>{participant.email}</td>
                                         <td>{participant.phoneNumber}</td>
+                                        <td>
+                                            <button className="text-white font-medium bg-red-600 hover:bg-red-500 font-serif px-3 py-1 rounded duration-300">Delete</button>
+                                        </td>
+
                                     </tr>
                                 ))
                             ) : (
